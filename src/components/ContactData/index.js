@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 
@@ -12,6 +12,8 @@ const ContactData = (props) => {
   const [city, setCity] = useState();
   const [street, setStreet] = useState();
 
+  const dunRef = useRef();
+
   useEffect(() => {
     if (props.newOrderStatus.finished && !props.newOrderStatus.error) {
       props.history.replace("/orders");
@@ -21,9 +23,15 @@ const ContactData = (props) => {
       // Цэвэрлэгч функц : Захиалгыг буцаагаад хоосолно. Дараачийн захиалгад бэлтгэнэ гэсэн үг.
       props.clearOrder();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.newOrderStatus.finished]);
 
   const changeName = (e) => {
+    if (dunRef.current.style.color === "red") {
+      dunRef.current.style.color = "green";
+    } else {
+      dunRef.current.style.color = "red";
+    }
     setName(e.target.value);
   };
 
@@ -52,7 +60,9 @@ const ContactData = (props) => {
 
   return (
     <div className={css.ContactData}>
-      Дүн : {props.price}₮
+      <div ref={dunRef}>
+        <strong style={{ fontSize: "16px" }}>Дүн : {props.price}₮</strong>
+      </div>
       <div>
         {props.newOrderStatus.error &&
           `Захиалгыг хадгалах явцад алдаа гарлаа : ${props.newOrderStatus.error}`}

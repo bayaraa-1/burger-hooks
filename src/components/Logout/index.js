@@ -7,6 +7,7 @@ import * as actions from "../../redux/actions/signupActions";
 const Logout = (props) => {
   useEffect(() => {
     props.logout();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return <Redirect to="/" />;

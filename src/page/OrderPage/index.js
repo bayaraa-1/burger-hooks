@@ -8,6 +8,7 @@ import * as actions from "../../redux/actions/orderActions";
 const OrderPage = (props) => {
   useEffect(() => {
     props.loadOrders(props.userId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
