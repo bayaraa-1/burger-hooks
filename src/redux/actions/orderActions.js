@@ -2,17 +2,25 @@ import axios from "../../axios-orders";
 
 export const loadOrders = (userId) => {
   return function (dispatch, getState) {
+    // Захиалгыг татаж эхлэлээ гэдгийг мэдэгдэнэ.
+    // Энийг хүлээж аваад Spinner ажиллаж эхлэнэ.
     dispatch(loadOrdersStart());
 
-    const token = getState().signupLoginReducer.token;
+    const token = getState().signupReducer.token;
 
     axios
-      .get(`/orders.json?&auth=${token}&orderBy="userId"&equalTo="${userId}"`)
+      .get(`orders.json?&auth=${token}&orderBy="userId"&equalTo="${userId}"`)
       .then((response) => {
         const loadedOrders = Object.entries(response.data).reverse();
         dispatch(loadOrdersSuccess(loadedOrders));
       })
       .catch((err) => dispatch(loadOrdersError(err)));
+  };
+};
+
+export const clearOrder = () => {
+  return {
+    type: "CLEAR_ORDER",
   };
 };
 
@@ -32,18 +40,19 @@ export const loadOrdersSuccess = (loadedOrders) => {
 export const loadOrdersError = (error) => {
   return {
     type: "LOAD_ORDERS_ERROR",
-    error: loadOrders,
+    error,
   };
 };
 
 // Захиалгыг хадгалах
-
 export const saveOrder = (newOrder) => {
   return function (dispatch, getState) {
+    // Spinner ergelduulne
     dispatch(saveOrderStart());
 
-    const token = getState().signupLoginReducer.token;
+    const token = getState().signupReducer.token;
 
+    // Firebase ruu hadgalna
     axios
       .post(`/orders.json?auth=${token}`, newOrder)
       .then((response) => {

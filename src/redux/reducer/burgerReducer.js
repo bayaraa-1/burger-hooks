@@ -8,10 +8,10 @@ const initialState = {
   totalPrice: 0,
   purchasing: false,
   ingredientNames: {
-    salad: "Салад",
+    bacon: "Гахайн мах",
     cheese: "Бяслаг",
     meat: "Үхрийн мах",
-    bacon: "Гахайн мах",
+    salad: "Салад",
   },
 };
 
@@ -39,7 +39,10 @@ const reducer = (state = initialState, action) => {
       totalPrice: newPrice,
       purchasing: newPrice > 0,
     };
+  } else if (action.type === "CLEAR_ORDER") {
+    return initialState;
   }
+
   return state;
 };
 

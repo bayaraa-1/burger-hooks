@@ -1,84 +1,74 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
 
 import css from "./style.module.css";
 import Button from "../../components/General/Button";
 
 import * as actions from "../../redux/actions/signupActions";
-import { connect } from "react-redux";
 import Spinner from "../../components/General/Spinner";
-import { Redirect } from "react-router-dom/cjs/react-router-dom";
 
-class SignupPage extends Component {
-  state = {
-    email: "",
-    password1: "",
-    password2: "",
-    error: "",
+const Signup = (props) => {
+  const [email, setEmail] = useState("");
+  const [password1, setPassword1] = useState("");
+  const [password2, setPassword2] = useState("");
+  const [error, setError] = useState("");
+
+  const changeEmail = (e) => {
+    setEmail(e.target.value);
   };
 
-  changeEmail = (e) => {
-    this.setState({ email: e.target.value });
+  const changePassword1 = (e) => {
+    setPassword1(e.target.value);
   };
 
-  changePassword1 = (e) => {
-    this.setState({ password1: e.target.value });
+  const changePassword2 = (e) => {
+    setPassword2(e.target.value);
   };
 
-  changePassword2 = (e) => {
-    this.setState({ password2: e.target.value });
-  };
-
-  signup = () => {
-    if (this.state.password1 === this.state.password2) {
-      this.props.signupUser(this.state.email, this.state.password1);
+  const signup = () => {
+    if (password1 === password2) {
+      props.signupUser(email, password1);
     } else {
-      this.setState({ error: "Нууц үгнүүд хоорондоо таарахгүй байна." });
+      setError("Нууц үгнүүд хоорондоо таарахгүй байна!");
     }
   };
 
-  render() {
-    return (
-      <div className={css.Signup}>
-        {this.props.userId && <Redirect to="/" />}
-        <h1>Бүртгэлийн форм</h1>
-        <div>Та өөрийн мэдээллээ оруулна уу.</div>
-        <input
-          onChange={this.changeEmail}
-          type="text"
-          placeholder="Имейл хаяг"
-        />
-        <input
-          onChange={this.changePassword1}
-          type="password"
-          placeholder="Нууц үгээ оруулна уу!"
-        />
-        <input
-          onChange={this.changePassword2}
-          type="password"
-          placeholder="Нууц үгээ давтан оруулна уу!"
-        />
-        {this.state.error && (
-          <div style={{ color: "red" }}>{this.state.error}</div>
-        )}
+  return (
+    <div className={css.Signup}>
+      {props.userId && <Redirect to="/" />}
 
-        {this.props.firebaseError && (
-          <div style={{ color: "red" }}>{this.props.firebaseError}</div>
-        )}
+      <h1>Бүртгэлийн форм</h1>
+      <div>Та өөрийн мэдээллээ оруулна уу</div>
+      <input onChange={changeEmail} type="text" placeholder="Имэйл хаяг" />
+      <input
+        onChange={changePassword1}
+        type="password"
+        placeholder="Нууц үгээ оруулна уу"
+      />
+      <input
+        onChange={changePassword2}
+        type="password"
+        placeholder="Нууц үгээ давтан оруулна уу"
+      />
+      {error && <div style={{ color: "red" }}>{error}</div>}
 
-        {this.props.saving && <Spinner />}
+      {props.firebaseError && (
+        <div style={{ color: "red" }}>{props.firebaseError}</div>
+      )}
 
-        <Button text="БҮРТГҮҮЛЭХ" btnType="Success" daragdsan={this.signup} />
-      </div>
-    );
-  }
-}
+      {props.saving && <Spinner />}
+
+      <Button text="БҮРТГҮҮЛЭХ" btnType="Success" daragdsan={signup} />
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
-    saving: state.signupLoginReducer.saving,
-    firebaseError: state.signupLoginReducer.firebaseError,
-    userId: state.signupLoginReducer.userId,
-    token: state.signupLoginReducer.token,
+    saving: state.signupReducer.saving,
+    firebaseError: state.signupReducer.firebaseError,
+    userId: state.signupReducer.userId,
   };
 };
 
@@ -89,4 +79,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(SignupPage);
+export default connect(mapStateToProps, mapDispatchToProps)(Signup);

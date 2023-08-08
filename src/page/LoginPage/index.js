@@ -1,60 +1,60 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
 
 import css from "./style.module.css";
 import Button from "../../components/General/Button";
-import * as actions from "../../redux/actions/loginActions";
 import Spinner from "../../components/General/Spinner";
-import { Redirect } from "react-router-dom/cjs/react-router-dom";
+import * as actions from "../../redux/actions/loginActions";
 
-class LoginPage extends Component {
-  state = {
+const Login = (props) => {
+  const [form, setForm] = useState({
     email: "",
     password: "",
+  });
+
+  const changeEmail = (e) => {
+    const newEmail = e.target.value;
+    setForm((formBefore) => ({
+      email: newEmail,
+      password: formBefore.password,
+    }));
   };
 
-  changeEmail = (e) => {
-    this.setState({ email: e.target.value });
+  const changePassword = (e) => {
+    const newPassword = e.target.value;
+    setForm((formBefore) => ({
+      email: formBefore.email,
+      password: newPassword,
+    }));
   };
 
-  changePassword = (e) => {
-    this.setState({ password: e.target.value });
+  const login = () => {
+    props.login(form.email, form.password);
   };
 
-  login = () => {
-    this.props.login(this.state.email, this.state.password);
-  };
-
-  render() {
-    return (
-      <div className={css.Login}>
-        {this.props.userId && <Redirect to="/orders" />}
-        <input
-          onChange={this.changeEmail}
-          type="text"
-          placeholder="Имейл хаяг"
-        />
-        <input
-          onChange={this.changePassword}
-          type="password"
-          placeholder="Нууц үг"
-        />
-        {this.props.logginIn && <Spinner />}
-        {this.props.firebaseError && (
-          <div style={{ color: "red" }}>{this.props.firebaseError}</div>
-        )}
-        <Button text="НЭВТРЭХ" btnType="Success" daragdsan={this.login} />
-      </div>
-    );
-  }
-}
+  return (
+    <div className={css.Login}>
+      {props.userId && <Redirect to="/orders" />}
+      <input onChange={changeEmail} type="text" placeholder="Имэйл хаяг" />
+      <input onChange={changePassword} type="password" placeholder="Нууц үг" />
+      {props.logginIn && <Spinner />}
+      {props.firebaseError && (
+        <div style={{ color: "red" }}>
+          {props.firebaseError} код нь : {props.firebaseErrorCode}
+        </div>
+      )}
+      <Button text="ЛОГИН" btnType="Success" daragdsan={login} />
+    </div>
+  );
+};
 
 const mapStateToProps = (state) => {
   return {
-    logginIn: state.signupLoginReducer.logginIn,
-    firebaseError: state.signupLoginReducer.firebaseError,
-    userId: state.signupLoginReducer.userId,
-    token: state.signupLoginReducer.token,
+    logginIn: state.signupReducer.logginIn,
+    firebaseError: state.signupReducer.firebaseError,
+    firebaseErrorCode: state.signupReducer.firebaseErrorCode,
+    userId: state.signupReducer.userId,
   };
 };
 
@@ -64,4 +64,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -27,7 +27,7 @@ const Menu = (props) => (
 
 const mapStateToProps = (state) => {
   return {
-    userId: state.signupLoginReducer.userId,
+    userId: state.signupReducer.userId,
   };
 };
 
