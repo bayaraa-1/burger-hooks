@@ -1,22 +1,24 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useContext } from "react";
+import BurgerContext from "../../context/BurgerContext";
 
 import Button from "../General/Button";
 
 const OrderSummary = (props) => {
+  const orderCtx = useContext(BurgerContext);
   return (
     <div>
       <h3>Таны захиалга</h3>
       <p>Таны сонгосон орцууд: </p>
       <ul>
-        {Object.keys(props.ingredients).map((el) => (
+        {Object.keys(orderCtx.burger.ingredients).map((el) => (
           <li key={el}>
-            {props.ingredientNames[el]} : {props.ingredients[el]}
+            {orderCtx.burger.ingredientNames[el]} :{" "}
+            {orderCtx.burger.ingredients[el]}
           </li>
         ))}
       </ul>
       <p>
-        <strong>Захиалгын дүн: {props.totalPrice}₮ </strong>
+        <strong>Захиалгын дүн: {orderCtx.burger.totalPrice}₮ </strong>
       </p>
       <p>Цаашаа үргэлжлүүлэх үү?</p>
       <Button daragdsan={props.onCancel} btnType="Danger" text="ТАТГАЛЗАХ" />
@@ -29,12 +31,4 @@ const OrderSummary = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    ingredientNames: state.burgerReducer.ingredientNames,
-    ingredients: state.burgerReducer.ingredients,
-    totalPrice: state.burgerReducer.totalPrice,
-  };
-};
-
-export default connect(mapStateToProps)(OrderSummary);
+export default OrderSummary;

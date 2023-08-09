@@ -1,13 +1,14 @@
-import React, { useState } from "react";
-import { connect } from "react-redux";
+import React, { useState, useContext } from "react";
 import { Redirect } from "react-router-dom/cjs/react-router-dom";
+import UserContext from "../../context/UserContext";
 
 import css from "./style.module.css";
 import Button from "../../components/General/Button";
 import Spinner from "../../components/General/Spinner";
-import * as actions from "../../redux/actions/loginActions";
 
 const Login = (props) => {
+  const userCtx = useContext(UserContext);
+
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -30,18 +31,19 @@ const Login = (props) => {
   };
 
   const login = () => {
-    props.login(form.email, form.password);
+    userCtx.loginUser(form.email, form.password);
   };
 
   return (
     <div className={css.Login}>
-      {props.userId && <Redirect to="/orders" />}
+      {userCtx.state.userId && <Redirect to="/orders" />}
       <input onChange={changeEmail} type="text" placeholder="Имэйл хаяг" />
       <input onChange={changePassword} type="password" placeholder="Нууц үг" />
-      {props.logginIn && <Spinner />}
-      {props.firebaseError && (
+      {userCtx.state.logginIn && <Spinner />}
+      {userCtx.state.firebaseError && (
         <div style={{ color: "red" }}>
-          {props.firebaseError} код нь : {props.firebaseErrorCode}
+          {userCtx.state.firebaseError}
+          код нь :{userCtx.state.firebaseErrorCode}
         </div>
       )}
       <Button text="ЛОГИН" btnType="Success" daragdsan={login} />
@@ -49,19 +51,4 @@ const Login = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    logginIn: state.signupReducer.logginIn,
-    firebaseError: state.signupReducer.firebaseError,
-    firebaseErrorCode: state.signupReducer.firebaseErrorCode,
-    userId: state.signupReducer.userId,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    login: (email, password) => dispatch(actions.loginUser(email, password)),
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
