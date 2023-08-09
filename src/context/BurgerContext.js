@@ -35,6 +35,11 @@ const INGREDIENT_PRICES = {
 export const BurgerStore = (props) => {
   const [burger, setBurger] = useState(initialState);
 
+  // useMemo turshilt
+  const toggle = () => {
+    setBurger({ ...burger, saving: !burger.saving });
+  };
+
   // Захиалгыг хадгалах
   const saveBurger = (newOrder, token) => {
     // Spinner ergelduulne
@@ -88,6 +93,7 @@ export const BurgerStore = (props) => {
         removeIngredient,
         saveBurger,
         clearBurger,
+        toggle,
       }}
     >
       {props.children}

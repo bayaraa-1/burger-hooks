@@ -46,7 +46,7 @@ const Login = (props) => {
           код нь :{userCtx.state.firebaseErrorCode}
         </div>
       )}
-      <Button text="ЛОГИН" btnType="Success" daragdsan={login} />
+      <Button text="НЭВТРЭХ" btnType="Success" daragdsan={login} />
     </div>
   );
 };
